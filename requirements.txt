@@ -17,3 +17,9 @@ httpx>=0.24.0
 # Async support
 aiofiles>=23.0.0
 websockets>=11.0
+
+# Plaid API (optional - for real transaction verification)
+# Set PLAID_CLIENT_ID and PLAID_SECRET to enable
+plaid-python>=14.0.0
+python-dotenv>=1.0.0
+certifi>=2023.0.0
