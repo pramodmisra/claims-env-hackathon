@@ -69,6 +69,9 @@ class ClaimsObservation(Observation):
     is_terminal: bool = Field(default=False, description="Whether episode is done")
     terminal_reason: str = Field(default="", description="Why episode ended")
 
+    # Reward (required for OpenEnv serialization)
+    reward: float = Field(default=0.0, description="Reward from this step")
+
 
 class ClaimsState(State):
     """

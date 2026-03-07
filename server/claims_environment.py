@@ -164,6 +164,7 @@ class ClaimsEnvironment(Environment):
             time_elapsed_minutes=0,
             queries_made=0,
             is_terminal=False,
+            reward=0.0,  # Initial observation has no reward
         )
 
     def step(self, action: ClaimsAction) -> ClaimsObservation:
@@ -195,6 +196,9 @@ class ClaimsEnvironment(Environment):
         # Store reward for retrieval
         self._last_reward = reward
         self._state.total_reward += reward
+
+        # Set reward on observation for client serialization
+        observation.reward = reward
 
         return observation
 
