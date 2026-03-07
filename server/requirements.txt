@@ -1,0 +1,5 @@
+# Claims Environment Dependencies
+# Minimal - most deps come from openenv-base
+
+# No additional dependencies needed for claims_env
+# The mock systems are pure Python

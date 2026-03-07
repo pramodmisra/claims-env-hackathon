@@ -1,0 +1,44 @@
+# OpenEnv Environment Manifest
+name: claims_env
+version: 1.0.0
+description: Insurance Claims Processing Environment for LLM Training
+
+# Problem statement alignment
+hackathon:
+  statement: "3.1 - Professional Tasks (World Modeling)"
+  partner: "Scaler AI Labs"
+  theme: "Multi-App RL Environment for Enterprise Workflows"
+
+# Environment metadata
+environment:
+  type: professional_task
+  domain: insurance
+  complexity: enterprise
+  partial_observability: true
+
+# Action space
+actions:
+  - query_policy
+  - query_claim_history
+  - check_fraud
+  - request_documents
+  - verify_coverage
+  - calculate_payout
+  - approve
+  - deny
+  - escalate
+
+# Reward structure
+rewards:
+  correct_decision: 10.0
+  wrong_decision: -5.0
+  fraud_caught: 5.0
+  fraud_missed: -10.0
+  query_cost: -0.1
+  efficiency_bonus: 1.0
+  efficiency_penalty: -0.2
+
+# Deployment
+deployment:
+  platform: huggingface_spaces
+  hardware: cpu-basic
