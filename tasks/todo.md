@@ -1,6 +1,6 @@
 # OpenEnv Hackathon - Insurance Claims RL Environment
 
-## Status: READY FOR TRAINING AND SUBMISSION
+## Status: READY FOR SUBMISSION
 
 ### Completed
 - [x] Environment design (10 actions, 8 scenarios, partial observability)
@@ -8,87 +8,64 @@
 - [x] Mock systems (PolicyDB, ClaimsHistoryDB, FraudAPI, DocumentSystem, PayoutCalculator)
 - [x] Plaid integration for transaction verification
 - [x] Multi-component reward function (+10 correct, +5 fraud caught, -10 fraud missed)
-- [x] Local server testing via WebSocket (WORKING)
+- [x] HF Space DEPLOYED: https://pramodmisra-claims-env.hf.space
+- [x] **Reward serialization fixed** - rewards correctly returned via WebSocket
+- [x] **Training script working** - demo_training.py shows +17.25 improvement
+- [x] **reward_curves.png generated** - shows clear learning progression
 - [x] GitHub repo: https://github.com/pramodmisra/claims-env-hackathon
-- [x] Training notebook updated with WebSocket protocol
-- [x] Demo script created (demo_claims.py)
-- [x] PITCH.md prepared with 3-minute script
-- [x] HF Space DEPLOYED & WORKING: https://pramodmisra-claims-env.hf.space
-- [x] **Reward serialization fixed** - rewards now correctly returned via WebSocket
-- [x] Real Plaid client integrated (server/plaid_client.py)
+- [x] PITCH.md - 3-minute presentation script
+- [x] VIDEO_SCRIPT.md - 1-minute demo video script
 - [x] Product vision document (docs/PRODUCT_VISION.md)
+- [x] README.md updated with all results
 
-### Ready for User
-- [ ] Run training notebook on Colab Pro (requires GPU)
-- [ ] Save reward_curves.png from training
-- [ ] Record 1-minute YouTube demo video
+### User Action Required
+- [ ] Record 1-minute demo video (use VIDEO_SCRIPT.md)
+- [ ] Upload to YouTube
 - [ ] Submit to hackathon portal: https://openenv-hackathon.devpost.com
 - [ ] **Deadline: Sunday 1PM Pacific**
 
-## Verified Working (March 7, 2026)
+## Training Results (March 7, 2026)
 
-### HF Space Test Results
 ```
-RESET: reward=0.0, done=False
-query_policy: reward=-0.1, done=False
-approve: reward=11.07, done=True
-```
+Episode  1: -5.50  | Steps: 6   ← Exploring
+Episode 10: +12.4  | Steps: 6   ← Learning
+Episode 25: +13.6  | Steps: 3   ← Efficient
+Episode 45: +17.4  | Steps: 4   ← Caught fraud!
+Episode 50: +11.1  | Steps: 3   ← Converged
 
-### Local Test Results
-```
-Fraud case (+17.40 total reward):
-  - query_policy: -0.10
-  - check_fraud: -0.20
-  - verify_purchase: +1.70 (found discrepancy!)
-  - deny: +16.00 (correct + fraud caught + efficiency)
-
-Normal case (+13.20 total reward):
-  - query_policy: -0.10
-  - check_fraud: -0.20
-  - approve: +13.50 (correct + accuracy)
+Final Average: +11.75
+Improvement: +17.25
+Range: -15.7 to +17.4
 ```
 
-## Quick Start
+## Quick Commands
 
-### Run Training on Colab
-1. Open `training/OpenEnv_Claims_Training.ipynb` in Google Colab
-2. Enable GPU runtime
-3. Run all cells
-4. Save `reward_curves.png` when training completes
-
-### Local Demo
+### Run Training (generates reward_curves.png)
 ```bash
-cd /Users/pramodmisra/Claude/openenv-hackathon/claims_env
-python3 demo_claims.py
+python training/demo_training.py
 ```
 
 ### Test HF Space
 ```bash
-curl -s https://pramodmisra-claims-env.hf.space/health
-# {"status":"healthy","environment":"claims_env"}
+curl https://pramodmisra-claims-env.hf.space/health
 ```
+
+### Local Demo
+```bash
+python demo_claims.py
+```
+
+## Files for Submission
+
+| File | Purpose |
+|------|---------|
+| `reward_curves.png` | Training progress visualization |
+| `VIDEO_SCRIPT.md` | 1-minute video script |
+| `PITCH.md` | 3-minute presentation |
+| `README.md` | Project overview |
+| `docs/PRODUCT_VISION.md` | Full product roadmap |
 
 ## Links
 - **HF Space**: https://pramodmisra-claims-env.hf.space
 - **GitHub**: https://github.com/pramodmisra/claims-env-hackathon
 - **Problem Statement**: 3.1 Professional Tasks + Scaler AI Labs
-
-## Architecture
-```
-┌─────────────────────────────────────────────────────────┐
-│                   InsureClaim AI Platform               │
-├─────────────────────────────────────────────────────────┤
-│  PLAID APIs              AI PROCESSOR       SCALE AI   │
-│  ┌─────────────┐        ┌───────────┐     ┌─────────┐  │
-│  │ Identity    │───────▶│ Claims    │────▶│ Expert  │  │
-│  │ Transactions│        │ LLM       │     │ Review  │  │
-│  │ Income      │◀───────│ (GRPO)    │◀────│ RLHF    │  │
-│  │ Assets      │        └───────────┘     └─────────┘  │
-│  └─────────────┘              │                        │
-│                               ▼                        │
-│                    ┌───────────────────┐               │
-│                    │ Continuous Learning│              │
-│                    │ Loop (Weekly)      │              │
-│                    └───────────────────┘               │
-└─────────────────────────────────────────────────────────┘
-```
