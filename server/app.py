@@ -15,11 +15,9 @@ except ImportError:
     from models import ClaimsAction, ClaimsObservation
     from server.claims_environment import ClaimsEnvironment
 
-# Create environment instance
-env = ClaimsEnvironment()
-
 # Create FastAPI app using OpenEnv helper
-app = create_fastapi_app(env, ClaimsAction, ClaimsObservation)
+# Note: Pass the CLASS, not an instance (OpenEnv creates instances per session)
+app = create_fastapi_app(ClaimsEnvironment, ClaimsAction, ClaimsObservation)
 
 
 # Add custom endpoints for environment info
