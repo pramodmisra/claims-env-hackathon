@@ -197,8 +197,10 @@ class ClaimsEnvironment(Environment):
         self._last_reward = reward
         self._state.total_reward += reward
 
-        # Set reward on observation for client serialization
+        # Set reward and done on observation for OpenEnv serialization
+        # OpenEnv's serialize_observation() expects observation.reward and observation.done
         observation.reward = reward
+        observation.done = observation.is_terminal
 
         return observation
 
