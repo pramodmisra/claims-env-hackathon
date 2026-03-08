@@ -224,7 +224,46 @@ This shows the environment works without needing full RL training.
 
 ---
 
-## 8. API Integration (Plaid)
+## 8. Unsloth/TRL Quirks
+
+### Fused Cross-Entropy Loss Shape Mismatch
+**Problem:** `TorchRuntimeError: Expected input batch_size (179) to match target batch_size (21)`
+
+**Root Cause:** Unsloth's fused cross-entropy loss in `unsloth_zoo/fused_losses/cross_entropy_loss.py` expects input and target tensors to have matching shapes.
+
+When you do:
+```python
+outputs = model(**inputs, labels=target_ids)
+```
+
+If `target_ids` has a different sequence length than `inputs`, you get this error.
+
+**Solutions:**
+
+1. **Pad targets to match input length:**
+```python
+# Ensure target_ids matches input length
+target_ids = F.pad(target_ids, (0, inputs['input_ids'].shape[1] - target_ids.shape[1]))
+```
+
+2. **Use generate() instead of forward with labels:**
+```python
+# Don't use labels= parameter with Unsloth
+outputs = model.generate(**inputs, max_new_tokens=20)
+```
+
+3. **Skip loss computation in demo:**
+```python
+# For hackathon demos, use exploration-based learning
+# Track advantage (reward - baseline) instead of loss
+advantage = episode_reward - BASELINE_REWARD
+```
+
+**Lesson:** Unsloth's optimizations change internal behavior. Test loss computation separately before integrating into training loop.
+
+---
+
+## 9. API Integration (Plaid)
 
 ### Sandbox vs Production
 - Always start with sandbox credentials
@@ -244,7 +283,7 @@ except plaid.ApiException as e:
 
 ---
 
-## 9. Project Structure
+## 10. Project Structure
 
 ### What Worked
 ```
@@ -274,7 +313,7 @@ claims_env/
 
 ---
 
-## 10. Debugging Checklist
+## 11. Debugging Checklist
 
 ### Environment Not Working
 1. ✅ Health check: `curl {url}/health`
