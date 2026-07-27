@@ -22,6 +22,6 @@ websockets>=11.0
 # Set PLAID_CLIENT_ID and PLAID_SECRET to enable
 plaid-python>=14.0.0
 python-dotenv>=1.0.0
-certifi>=2023.0.0
+certifi>=2026.7.22
 
 # Cache bust: Sat Mar  7 17:17:29 EST 2026
